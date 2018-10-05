@@ -21,7 +21,7 @@ cohort=function(){
         cohort.div.appendChild(document.createElement('hr'))
         setTimeout(_=>{
             ht.querySelector('#headerLogo').click()
-            var txt = 'Start by <a href="#">loggin in</a> your account with DCEG Cohort <button type="button" class="btn btn-success">epicommons</button>.'
+            var txt = 'Start by <a href="#">loggin in</a> your account with <a href="https://dceg.cancer.gov" target="_blank">DCEG</a> Cohort epicommons.'
             cohort.msg(txt,{color:'navy'})
         },1000)
         //debugger
