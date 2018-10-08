@@ -245,7 +245,13 @@ cohort.boxUI=function(){
             loggedInAsPre.textContent=JSON.stringify(x,null,3)
             loggedInAsPreMore.hidden=false
             if(cohort.logo.annimated){cohort.logo.click()}
-            cohort.msg('logged in as '+cohort.me.name+', details below.',{color:'maroon'})
+            cohort.msg('logged in as '+cohort.me.name+', details below <button id="logoutBt"style="backgroud-color:yellow;color:red" onclick="localStorage.clear">logout</button>.',{color:'maroon'})
+            setTimeout(function(){
+                logoutBt.onclick=function(){
+                    localStorage.clear()
+                    location.search=''
+                }
+            },2000)
         }))
 
 
