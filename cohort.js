@@ -9,7 +9,7 @@ cohort=function(){
             id:"headerLogo"
         })) // logo before the title
         var tt = document.createElement('i') // title
-        tt.textContent=' Cohort Study'
+        tt.innerHTML=' Cohort Study <a href="https://github.com/episphere/cohort" target="_blank"><i class="fab fa-github-alt"></i>'
         tt.style.color="cadetblue"
         tt.style.fontWeight="bold"
         ht.appendChild(tt)
