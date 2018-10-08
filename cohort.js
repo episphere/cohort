@@ -234,7 +234,7 @@ cohort.boxUI=function(){
     //cohort.boxMe=cohort(await fetch('https://api.box.com/2.0/users/me',{headers: {Authorization:'Bearer m6P1WG2vTONSlQm7qSjxs653ffeGhdFh'}})).json()
     var h = '<p>You are logged in as ...</p>'
     h += '<pre id="loggedInAsPre" style="color:green"></pre>'
-    h += '<p id="loggedInAsPreMore" hidden=true>... and I can act on your behalf to check data types, find out what projects do you have access, manage your files, engage you in managing file access by your collaborators, and even analyse the data available to produce real-time interactive visualizations.</p>'
+    h += '<p id="loggedInAsPreMore" hidden=true>... and I can act on your behalf to check data types, find out what projects you are a member, help you manage the files you are contributing, engage you in managing access by your collaborators, and even analyse the data available to produce real-time interactive visualizations.</p>'
     cohort.boxDiv.innerHTML=h
     fetch(
         'https://api.box.com/2.0/users/me',
