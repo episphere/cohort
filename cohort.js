@@ -30,7 +30,7 @@ cohort=function(){
             setTimeout(_=>{
                 ht.querySelector('#headerLogo').click()
                 if((location.search+location.hash).length==0){
-                    var txt = 'Start by <a href="#">loggin in</a> your account with <a href="https://dceg.cancer.gov" target="_blank">DCEG</a> Cohort epicommons.'
+                    var txt = 'Start by <a href="https://episphere.github.io/cohort/imgs/cohortBoxLogin.gif" target="_blank">loggin in</a> your account with <a href="https://dceg.cancer.gov" target="_blank">DCEG</a> Cohort epicommons.'
                     cohort.msg(txt,{color:'navy'})
                 }
             },1000)
