@@ -278,10 +278,11 @@ cohort.boxUI=function(){
 cohort.epiSphereDriveBox='54872036898' // <-- address of Box.com Drive folder
 
 cohort.boxFolderUI=function(){
-    cohort.boxDiv.innerHTML='Search <input> <i class="fas fa-search"></i>'
+    
     // check that user has access to drive
     cohort.getJSON(`https://api.box.com/2.0/folders/${cohort.epiSphereDriveBox}/items`)
         .then(x=>{
+            cohort.boxDiv.innerHTML='Search <input> <i class="fas fa-search"></i>'
             //cohort.boxDiv.innerHTML=`<p>The following cohort study projects were found your <a href="https://app.box.com/folder/${cohort.epiSphereDriveBox}" target="_blank">epiSphere drive</a>:</p>`
             cohort.msg(`<p>${x.entries.length} Studies were found in your <a href="https://app.box.com/folder/${cohort.epiSphereDriveBox}" target="_blank">epiSphere drive</a>:</p>`)
             if(cohort.logo.annimated){cohort.logo.click()}
