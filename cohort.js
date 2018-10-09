@@ -9,7 +9,7 @@ cohort=function(){
             id:"headerLogo"
         })) // logo before the title
         var tt = document.createElement('i') // title
-        tt.innerHTML=' Cohort Study <a href="https://github.com/episphere/cohort" target="_blank"><i class="fab fa-github-alt"></i>'
+        tt.innerHTML=' Cohort Study <a href="https://github.com/episphere/cohort" target="_blank"><i class="fab fa-github-alt"></i></a> <span id="loginSpan" style="float:right;font-size:small;font-weight:normal;font-style:normal;color:navy"></span>'
         tt.style.color="cadetblue"
         tt.style.fontWeight="bold"
         ht.appendChild(tt)
@@ -109,6 +109,7 @@ cohort.msg=function(txt,st,t){
         })
         setTimeout(_=>{
             cohort.msgDiv.innerHTML=div.innerHTML
+            if(st.fun){st.fun()} // if callback function at st.fun 
         },(txt.length*t+t))
     }else{
         cohort.msgDiv.innerHTML=txt
@@ -232,9 +233,9 @@ cohort.boxUI=function(){
     cohort.boxClient = new cohort.box.BasicBoxClient({accessToken: cohort.boxParms.access_token});
     //bp.access_token
     //cohort.boxMe=cohort(await fetch('https://api.box.com/2.0/users/me',{headers: {Authorization:'Bearer m6P1WG2vTONSlQm7qSjxs653ffeGhdFh'}})).json()
-    var h = '<p>You are logged in as ...</p>'
+    var h = '<p>Make sure this is indeed you ...</p>'
     h += '<pre id="loggedInAsPre" style="color:green"></pre>'
-    h += '<p id="loggedInAsPreMore" hidden=true>... and I can act on your behalf to check data types, find out what projects you are a member, help you manage the files you are contributing, engage you in managing access by your collaborators, and even analyse the data available to produce real-time interactive visualizations.</p>'
+    h += '<p id="loggedInAsPreMore" hidden=true>... and note that this application can now act on your behalf to perform QA/GC on file contents, find out what projects you are a member, help you manage the files you are contributing, engage you in managing access by your collaborators, and even analyse the data available to produce real-time interactive visualizations.</p>'
     cohort.boxDiv.innerHTML=h
     fetch(
         'https://api.box.com/2.0/users/me',
@@ -245,18 +246,73 @@ cohort.boxUI=function(){
             loggedInAsPre.textContent=JSON.stringify(x,null,3)
             loggedInAsPreMore.hidden=false
             if(cohort.logo.annimated){cohort.logo.click()}
-            cohort.msg('logged in as '+cohort.me.name+', details below <button id="logoutBt"style="backgroud-color:yellow;color:red" onclick="localStorage.clear">logout</button>.',{color:'maroon'})
-            setTimeout(function(){
-                logoutBt.onclick=function(){
-                    localStorage.clear()
-                    location.search=''
+            cohort.msg('Check info below, then <button id="continueFromLogin" style="color:blue;background-color:yellow">continue</button>',{
+                color:'navy',
+                fun:function(){
+                    cohort.logo.click()
+                    continueFromLogin.onclick=function(){
+                        boxDiv.textContent='...'
+                        cohort.boxFolderUI()
+                    }
+                }
+            })
+            //cohort.msg('logged in as '+cohort.me.name+', details below <button id="logoutBt"style="backgroud-color:yellow;color:red" onclick="localStorage.clear">logout</button>.',{color:'maroon'})
+            loginSpan.innerHTML=`${cohort.me.name} (${cohort.me.login}) <button id="logoutBt" style="color:red">logout</button>`
+            logoutBt.onclick=function(){
+                localStorage.clear()
+                location.search=''
+            }
+            /*
+            setTimeout(_=>{
+                continueFromLogin.onclick=function(){
+                    cohort.logo.click()
+                    boxDiv.textContent='...'
+                    cohort.boxFolderUI()
                 }
             },2000)
+            */
         }))
-
-
-
     //debugger
+}
+
+cohort.epiSphereDriveBox='54872036898' // <-- address of Box.com Drive folder
+
+cohort.boxFolderUI=function(){
+    cohort.boxDiv.innerHTML='Search <input> <i class="fas fa-search"></i>'
+    // check that user has access to drive
+    cohort.getJSON(`https://api.box.com/2.0/folders/${cohort.epiSphereDriveBox}/items`)
+        .then(x=>{
+            //cohort.boxDiv.innerHTML=`<p>The following cohort study projects were found your <a href="https://app.box.com/folder/${cohort.epiSphereDriveBox}" target="_blank">epiSphere drive</a>:</p>`
+            cohort.msg(`<p>${x.entries.length} Studies were found in your <a href="https://app.box.com/folder/${cohort.epiSphereDriveBox}" target="_blank">epiSphere drive</a>:</p>`)
+            if(cohort.logo.annimated){cohort.logo.click()}
+            var ol = document.createElement('ol')
+            cohort.boxDiv.appendChild(ol)
+            x.entries.forEach(function(xi,i){
+                var li = document.createElement('li')
+                li.id="studyLi_"+i
+                var h=`<h4 style="color:maroon"><a href="https://app.box.com/folder/${xi.id}" target="_bank"><i class="fas fa-archive"></i></a> ${xi.name} <span style="font-size:small">[<a id="viewFolder" href="#" style="color:green">view</a>]</span></h4>`
+                li.innerHTML=h
+                li.xi=xi // just in case we want to use "this" later
+                ol.appendChild(li)
+                li.querySelector('#viewFolder').onclick=cohort.viewFolder
+                //debugger
+            })
+            //debugger
+        })
+        .catch(e=>{
+            cohort.logo.click()
+            cohort.boxDiv.innerHTML='You don\'t appear to have an account with epiSphere. If this is not right please contact <a href="mailto:jonas.almeida@stonybrookmedicine.edu" style="color:red">xyz</a>.'
+            if(cohort.logo.annimated){cohort.logo.click()}
+        })   
+}
+
+cohort.viewFolder=function(){
+    var li = this.parentElement.parentElement.parentElement
+    debugger
+}
+
+cohort.getJSON=async function(url){
+    return (await fetch(url,{headers: {Authorization:'Bearer '+JSON.parse(localStorage.boxParms).access_token}})).json()
 }
 
 
