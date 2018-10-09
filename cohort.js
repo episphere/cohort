@@ -311,8 +311,9 @@ cohort.boxFolderUI=function(){
 cohort.viewFolder=function(){
     var li = this.parentElement.parentElement.parentElement
     // make sure view div is created already
-    if(!li.querySelector('.viewFolderDiv')){
-        var viewFolderDiv=document.createElement('div')
+    var viewFolderDiv=li.querySelector('.viewFolderDiv')
+    if(!viewFolderDiv){
+        viewFolderDiv=document.createElement('div')
         viewFolderDiv.classList.add('viewFolderDiv')
         li.appendChild(viewFolderDiv)
     }
