@@ -296,7 +296,6 @@ cohort.boxFolderUI=function(){
                 li.innerHTML=h
                 li.xi=xi // just in case we want to use "this" later
                 ol.appendChild(li)
-                li.appendChild(document.createElement('hr'))
                 li.querySelector('#viewFolder').onclick=cohort.viewFolder
                 //debugger
             })
@@ -323,6 +322,7 @@ cohort.viewFolder=function(){
         viewFolderDiv.innerHTML=`<p>Found ${xii.total_count} assigned to you:</p>`
         var ol=document.createElement('ol')
         viewFolderDiv.appendChild(ol)
+        viewFolderDiv.appendChild(document.createElement('hr'))
         xii.entries.forEach(x=>{
             var li=document.createElement('li')
             ol.appendChild(li)
