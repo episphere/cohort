@@ -309,7 +309,29 @@ cohort.boxFolderUI=function(){
 
 cohort.viewFolder=function(){
     var li = this.parentElement.parentElement.parentElement
-    debugger
+    // make sure view div is created already
+    if(!li.querySelector('.viewFolderDiv')){
+        var viewFolderDiv=document.createElement('div')
+        viewFolderDiv.classList.add('viewFolderDiv')
+        li.appendChild(viewFolderDiv)
+    }
+    // fill it with entries
+    cohort.getJSON(`https://api.box.com/2.0/folders/${li.xi.id}/items`)
+    .then(xii=>{
+        viewFolderDiv.innerHTML=`<p>Found ${xii.total_count} assigned to you:</p>`
+        var ol=document.createElement('ol')
+        viewFolderDiv.appendChild(ol)
+        xii.entries.forEach(x=>{
+            var li=document.createElement('li')
+            ol.appendChild(li)
+            li.innerHTML=`<a href="https://app.box.com/file/${x.id}" target="_blank">${x.name}</a> `
+
+            //debugger
+
+        })
+    })
+
+    
 }
 
 cohort.getJSON=async function(url){
