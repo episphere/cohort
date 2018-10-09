@@ -324,7 +324,7 @@ cohort.viewFolder=function(){
         xii.entries.forEach(x=>{
             var li=document.createElement('li')
             ol.appendChild(li)
-            li.innerHTML=`<a href="https://app.box.com/file/${x.id}" target="_blank">${x.name}</a> `
+            li.innerHTML=`<a href="https://app.box.com/file/${x.id}?sidebar=metadata&tab=properties" target="_blank">${x.name}</a> `
 
             //debugger
 
