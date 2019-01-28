@@ -9,7 +9,7 @@ cohort=function(){
             id:"headerLogo"
         })) // logo before the title
         var tt = document.createElement('i') // title
-        tt.innerHTML=' Cohort Study <a href="https://github.com/episphere/cohort" target="_blank"><i class="fab fa-github-alt"></i></a> <span id="loginSpan" style="float:right;font-size:small;font-weight:normal;font-style:normal;color:navy"></span>'
+        tt.innerHTML=' DCEG Cohort Study <a href="https://github.com/episphere/cohort" target="_blank"><i class="fab fa-github-alt"></i></a> <span id="loginSpan" style="float:right;font-size:small;font-weight:normal;font-style:normal;color:navy"></span>'
         tt.style.color="cadetblue"
         tt.style.fontWeight="bold"
         ht.appendChild(tt)
@@ -30,7 +30,7 @@ cohort=function(){
             setTimeout(_=>{
                 ht.querySelector('#headerLogo').click()
                 if((location.search+location.hash).length==0){
-                    var txt = 'Start by <a href="https://episphere.github.io/cohort/imgs/cohortBoxLogin.gif" target="_blank">loggin in</a> your account with <a href="https://dceg.cancer.gov" target="_blank">DCEG</a> Cohort epicommons.'
+                    var txt = 'Start by <a href="https://episphere.github.io/cohort/imgs/cohortBoxLogin.gif" target="_blank">loggin in</a> your account with <a href="https://dceg.cancer.gov" target="_blank">DCEG</a> Cohort Commons.'
                     cohort.msg(txt,{color:'navy'})
                 }
             },1000)
@@ -40,6 +40,9 @@ cohort=function(){
     }
     //debugger
 }
+
+// config parms in localStorage
+if(!localStorage.cohortConfig){localStorage.cohortConfig='{}'}
 
 cohort.cohortLogo=function(st){
     st=st||{}
@@ -243,25 +246,40 @@ cohort.boxUI=function(){
             Authorization:'Bearer '+cohort.boxParms.access_token}
         }).then(x=>x.json().then(function(x){
             cohort.me=x
-            loggedInAsPre.textContent=JSON.stringify(x,null,3)
-            loggedInAsPreMore.hidden=false
-            if(cohort.logo.annimated){cohort.logo.click()}
-            cohort.msg('Check info below, then <button id="continueFromLogin" style="color:blue;background-color:yellow">continue</button>',{
-                color:'navy',
-                fun:function(){
-                    cohort.logo.click()
-                    continueFromLogin.onclick=function(){
-                        boxDiv.textContent='...'
-                        cohort.boxFolderUI()
-                    }
-                }
-            })
-            //cohort.msg('logged in as '+cohort.me.name+', details below <button id="logoutBt"style="backgroud-color:yellow;color:red" onclick="localStorage.clear">logout</button>.',{color:'maroon'})
             loginSpan.innerHTML=`${cohort.me.name} (${cohort.me.login}) <button id="logoutBt" style="color:red">logout</button>`
             logoutBt.onclick=function(){
                 localStorage.clear()
                 location.search=''
             }
+            var cohortConfig = JSON.parse(localStorage.cohortConfig)
+            if(cohortConfig.dontShowUserInfo){
+                boxDiv.textContent='...'
+                cohort.boxFolderUI()
+            }else{
+                loggedInAsPre.textContent=JSON.stringify(x,null,3)
+                loggedInAsPreMore.hidden=false
+                if(cohort.logo.annimated){cohort.logo.click()}
+                cohort.msg('Check info below, then <button id="continueFromLogin" style="color:blue;background-color:yellow">continue</button> <span style="color:maroon"><input id="dontShowUserInfo" type="checkbox"><i class="fa fa-arrow-left" aria-hidden="true"></i> don\'t show this again</span>.',
+                   {
+                    color:'navy',
+                    fun:function(){
+                        cohort.logo.click()
+                        continueFromLogin.onclick=function(){
+                            boxDiv.textContent='...'
+                            cohort.boxFolderUI()
+                        }
+                        //debugger
+                        dontShowUserInfo.onclick=function(){
+                            var cohortConfig = JSON.parse(localStorage.cohortConfig)
+                            cohortConfig.dontShowUserInfo=true
+                            localStorage.cohortConfig=JSON.stringify(cohortConfig)
+                        }
+                   }
+                })
+                //cohort.msg('logged in as '+cohort.me.name+', details below <button id="logoutBt"style="backgroud-color:yellow;color:red" onclick="localStorage.clear">logout</button>.',{color:'maroon'})
+                
+            }
+                
             /*
             setTimeout(_=>{
                 continueFromLogin.onclick=function(){
@@ -275,20 +293,22 @@ cohort.boxUI=function(){
     //debugger
 }
 
-cohort.epiSphereDriveBox='64824692812' // <-- address of Box.com Drive folder
+cohort.epiSphereDriveBox='62737308111' // <-- address of Box.com Drive folder
 
-cohort.boxFolderUI=function(){
-    
+cohort.boxFolderUI=function(div){
+    div=div||cohort.boxDiv
     // check that user has access to drive
     cohort.getJSON(`https://api.box.com/2.0/folders/${cohort.epiSphereDriveBox}/items`)
         .then(x=>{
-            cohort.boxDiv.innerHTML='Search <input> <i class="fas fa-search"></i>'
-            cohort.boxDiv.appendChild(document.createElement('hr'))
+            div.innerHTML='Search <input> <i class="fas fa-search"></i>'
+            var hr = document.createElement('hr')
+            hr.style.borderColor="navy"
+            div.appendChild(hr)
             //cohort.boxDiv.innerHTML=`<p>The following cohort study projects were found your <a href="https://app.box.com/folder/${cohort.epiSphereDriveBox}" target="_blank">epiSphere drive</a>:</p>`
-            cohort.msg(`<p>${x.entries.length} Studies were found in your <a href="https://app.box.com/folder/${cohort.epiSphereDriveBox}" target="_blank">epiSphere drive</a>:</p>`)
+            cohort.msg(`<p>${x.entries.length} entries were found in your <a href="https://app.box.com/folder/${cohort.epiSphereDriveBox}" target="_blank">epiSphere drive</a>:</p>`)
             if(cohort.logo.annimated){cohort.logo.click()}
             var ol = document.createElement('ol')
-            cohort.boxDiv.appendChild(ol)
+            div.appendChild(ol)
             x.entries.forEach(function(xi,i){
                 var li = document.createElement('li')
                 li.id="studyLi_"+i
@@ -299,41 +319,61 @@ cohort.boxFolderUI=function(){
                 li.querySelector('#viewFolder').onclick=cohort.viewFolder
                 //debugger
             })
+            var hr = document.createElement('hr')
+            hr.style.borderColor="navy"
+            div.appendChild(hr)
             //debugger
         })
         .catch(e=>{
             cohort.logo.click()
-            cohort.boxDiv.innerHTML='You don\'t appear to have an account with epiSphere. If this is not right please contact <a href="mailto:jonas.almeida@stonybrookmedicine.edu">jonas.dealmeida@nih.gov</a>.'
+            div.innerHTML='You don\'t appear to have an account with epiSphere. If this is not right please contact <a href="mailto:jonas.almeida@stonybrookmedicine.edu">jonas.dealmeida@nih.gov</a>.'
             if(cohort.logo.annimated){cohort.logo.click()}
         })   
 }
 
 cohort.viewFolder=function(){
-    var li = this.parentElement.parentElement.parentElement
-    // make sure view div is created already
-    var viewFolderDiv=li.querySelector('.viewFolderDiv')
-    if(!viewFolderDiv){
-        viewFolderDiv=document.createElement('div')
-        viewFolderDiv.classList.add('viewFolderDiv')
-        li.appendChild(viewFolderDiv)
-    }
-    // fill it with entries
-    cohort.getJSON(`https://api.box.com/2.0/folders/${li.xi.id}/items`)
-    .then(xii=>{
-        viewFolderDiv.innerHTML=`<p>Found ${xii.total_count} entries shared with you:</p>`
-        var ol=document.createElement('ol')
-        viewFolderDiv.appendChild(ol)
-        viewFolderDiv.appendChild(document.createElement('hr'))
-        xii.entries.forEach(x=>{
-            var li=document.createElement('li')
-            ol.appendChild(li)
-            li.innerHTML=`<a href="https://app.box.com/file/${x.id}?sidebar=metadata&tab=properties" target="_blank">${x.name}</a> `
-
-            //debugger
-
+    if(this.textContent=="view"){
+        this.textContent="hide"
+        var li = this.parentElement.parentElement.parentElement
+        // make sure view div is created already
+        var viewFolderDiv=li.querySelector('.viewFolderDiv')
+        if(!viewFolderDiv){
+            viewFolderDiv=document.createElement('div')
+            viewFolderDiv.classList.add('viewFolderDiv')
+            li.appendChild(viewFolderDiv)
+        }
+        // fill it with entries
+        cohort.getJSON(`https://api.box.com/2.0/folders/${li.xi.id}/items`)
+        .then(xii=>{
+            viewFolderDiv.innerHTML=`<p>Found ${xii.total_count} entries shared with you:</p>`
+            var ol=document.createElement('ol')
+            viewFolderDiv.appendChild(ol)
+            viewFolderDiv.appendChild(document.createElement('hr'))
+            xii.entries.forEach(x=>{
+                var li=document.createElement('li')
+                li.xi=x
+                ol.appendChild(li)
+                if(x.type=='folder'){
+                    li.innerHTML=`<a href="https://app.box.com/${x.type}/${x.id}?sidebar=metadata&tab=properties" target="_blank"><i class="fas fa-archive"></i> <span style="color:maroon">${x.name}</span></a><span style="color:maroon"> <span>[<a href="#" class="folder" style="color:green">view</a>]</span></span>`
+                    var folder=li.querySelector('.folder')
+                    folder.onclick=cohort.viewFolder
+                    //debugger
+                }else{ // file
+                    li.innerHTML=`<a href="https://app.box.com/${x.type}/${x.id}?sidebar=metadata&tab=properties" target="_blank">${x.name}</a> [<a href="#" class="file" style="color:green">view</a>]`
+                    var file=li.querySelector('.file')
+                    file.onclick=cohort.viewFile
+                }
+                
+                //debugger
+            })
         })
-    })
-
+    }else{
+        this.textContent="view"
+        var listDiv=this.parentElement.parentElement.parentElement.querySelector('div')
+        listDiv.remove()
+        //debugger
+    }
+        
     
 }
 
