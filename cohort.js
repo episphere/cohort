@@ -131,8 +131,8 @@ cohort.boxdrive=async function(div){
             cohort.boxdrive.config.client_id='52zad6jrv5v52mn1hfy1vsjtr9jn5o1w'
             cohort.boxdrive.config.server_id='2rHTqzJumz8s9bAjmKMV83WHX1ooN4kT' //<-- reset when proxy is deployed
         }else{
-            cohort.boxdrive.config.client_id='inzkfy0b8x34ue8gtju81tgmk7kzvbxu'
-            cohort.boxdrive.config.server_id='Hju0PFsNQoFwD6BmNlFso0oVMyz1PoTd' //<-- reset when proxy is deployed
+            cohort.boxdrive.config.client_id='chjgzcmmrvkeezw0ausf9up81oyzsf8m'
+            cohort.boxdrive.config.server_id='aX6RT5waUHQ2uipbVFNYyf0oB6eQT9dY' //<-- reset when proxy is deployed
         }
     }
     cohort.getParms() // <-- getting parameters here!
