@@ -128,8 +128,8 @@ cohort.boxdrive=async function(div){
     if(!cohort.boxdrive.config){
         cohort.boxdrive.config={}
         if(location.hostname=="localhost"){
-            cohort.boxdrive.config.client_id='fz4p8pqjn0j02j4a3jc26ezj66k0ptgk'
-            cohort.boxdrive.config.server_id='erNWNyysH1EBaNpGZixT6vNFwo1Ez4ob' //<-- reset when proxy is deployed
+            cohort.boxdrive.config.client_id='52zad6jrv5v52mn1hfy1vsjtr9jn5o1w'
+            cohort.boxdrive.config.server_id='2rHTqzJumz8s9bAjmKMV83WHX1ooN4kT' //<-- reset when proxy is deployed
         }else{
             cohort.boxdrive.config.client_id='inzkfy0b8x34ue8gtju81tgmk7kzvbxu'
             cohort.boxdrive.config.server_id='Hju0PFsNQoFwD6BmNlFso0oVMyz1PoTd' //<-- reset when proxy is deployed
@@ -275,7 +275,7 @@ cohort.boxUI=function(){
     //debugger
 }
 
-cohort.epiSphereDriveBox='54872036898' // <-- address of Box.com Drive folder
+cohort.epiSphereDriveBox='64824692812' // <-- address of Box.com Drive folder
 
 cohort.boxFolderUI=function(){
     
@@ -303,7 +303,7 @@ cohort.boxFolderUI=function(){
         })
         .catch(e=>{
             cohort.logo.click()
-            cohort.boxDiv.innerHTML='You don\'t appear to have an account with epiSphere. If this is not right please contact <a href="mailto:jonas.almeida@stonybrookmedicine.edu" style="color:red">xyz</a>.'
+            cohort.boxDiv.innerHTML='You don\'t appear to have an account with epiSphere. If this is not right please contact <a href="mailto:jonas.almeida@stonybrookmedicine.edu">jonas.dealmeida@nih.gov</a>.'
             if(cohort.logo.annimated){cohort.logo.click()}
         })   
 }
@@ -320,7 +320,7 @@ cohort.viewFolder=function(){
     // fill it with entries
     cohort.getJSON(`https://api.box.com/2.0/folders/${li.xi.id}/items`)
     .then(xii=>{
-        viewFolderDiv.innerHTML=`<p>Found ${xii.total_count} assigned to you:</p>`
+        viewFolderDiv.innerHTML=`<p>Found ${xii.total_count} entries shared with you:</p>`
         var ol=document.createElement('ol')
         viewFolderDiv.appendChild(ol)
         viewFolderDiv.appendChild(document.createElement('hr'))
