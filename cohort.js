@@ -377,6 +377,30 @@ cohort.viewFolder=function(){
     
 }
 
+cohort.viewFile=function(){
+    var li=this.parentElement
+    if(this.text=="view"){
+        this.text="hide"
+        var ifr = document.createElement('iframe')
+        var div = document.createElement('div')
+        div.class="viewIframeDiv"
+        div.style.height="800px"
+        li.appendChild(div)
+        div.innerHTML=`<iframe src="https://nih.app.box.com/embed/${li.xi.type}/${li.xi.id}?tab=properties" frameborder="0" allowfullscreen webkitallowfullscreen msallowfullscreen width="100%" height="100%"></iframe>`
+    }else if(this.text=="hide"){
+        this.text="show"
+        this.style.color="orange"
+        this.parentElement.querySelector('div').hidden=true
+        //debugger
+    }else{ // show
+        this.text="hide"
+        this.style.color="orange"
+        this.parentElement.querySelector('div').hidden=false
+    }
+    
+    //debugger
+}
+
 cohort.getJSON=async function(url){
     return (await fetch(url,{headers: {Authorization:'Bearer '+JSON.parse(localStorage.boxParms).access_token}})).json()
 }
