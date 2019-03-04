@@ -293,7 +293,7 @@ cohort.boxUI=function(){
     //debugger
 }
 
-cohort.epiSphereDriveBox='62737308111' // <-- address of Box.com Drive folder
+cohort.epiSphereDriveBox='62735098034' // <-- address of Box.com Drive folder
 
 cohort.boxFolderUI=function(div){
     div=div||cohort.boxDiv
